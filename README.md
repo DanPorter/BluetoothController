@@ -2,9 +2,9 @@
 A simple Bluetooth controller using Serial commands with a Tkinter graphical user interface
 
 To run:
-'''
+```
 python BluetoothController.py 
-'''
+```
 
  - A window should appear, set the port and baud rate, then press "Connect"
  - Use the joystick to move your T-Bot, or arrow keys (focus must be on the joystick)
