@@ -1,5 +1,5 @@
-import pygame, sys, pygame.mixer
-from pygame.locals import *
+#import pygame, sys, pygame.mixer
+#from pygame.locals import *
 import serial
 from time import sleep
 

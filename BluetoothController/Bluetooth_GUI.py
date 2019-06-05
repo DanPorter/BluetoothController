@@ -26,19 +26,6 @@ Version 1.0     03/Feb/2019
 By Dan Porter
 2019
 """
-"""
-Control Panel>Hardware>Printers>Other Devices>MaximusRoboticus
-Bluetooth>Unique identifier
-98:d3:32:21:40:d1
-Services: Serial Port
-COM5
-
-Baud rate
-38400
-
-Windows 10 Bluetooth Serial Terminal (Microsoft App store)
-https://www.microsoft.com/en-gb/p/bluetooth-serial-terminal/9wzdncrdfst8?activetab=pivot%3Aoverviewtab
-"""
 
 import math
 try:
@@ -91,6 +78,8 @@ class TbotGui:
         # Ports
         ports = list_ports.comports()
         portlist = [p.device for p in ports]
+        if len(portlist) < 1:
+            raise Exception('Bluetooth is not active')
 
         # Create Tk inter instance
         self.root = tk.Tk()
@@ -304,9 +293,9 @@ class TbotGui:
             self.bluetooth = serial.Serial(portname, baudrate, timeout=0.1, write_timeout=0.1)
             self.notification.set('Connected')
         except serial.serialutil.SerialException:
-        	self.bluetooth = None
-        	self.notification.set('Can\'t Connect')
-        	return
+            self.bluetooth = None
+            self.notification.set('Can\'t Connect')
+            return
             #self.notification.set('Dan_Bluetooth_text.txt Connected')
             #self.bluetooth = open('Dan_Bluetooth_test.txt', 'w+b')
         self.clearOutput()
@@ -321,6 +310,7 @@ class TbotGui:
         self.bluetooth = None
 
     def readBluetooth(self):
+        """Read current bluetooth buffer as text line"""
         if self.bluetooth is None: return
         #try:
         #line = bluetooth.readline().decode().strip().split()
@@ -337,7 +327,16 @@ class TbotGui:
             line = []
         return line
 
+    def output2array(self, line):
+        """Read T-Bot Bluetooth output as an array"""
+        items = [val.split(',') for val in line.strip('\x02\x03').split('\x03\x02')]
+        if len(items[0]) != len(items[-1]):
+            items = items[1:]
+        return items
+
+
     def writeBluetooth(self, sendstr):
+        """Write string to bluetooth device"""
         if self.bluetooth is None: return
         try:
             self.bluetooth.write(sendstr.encode('ascii', 'ignore'))

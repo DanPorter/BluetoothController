@@ -21,7 +21,7 @@ Typical port names:
 Typical Baud rates:
     38400
 
-Version 1.0     31/March/2019
+Version 1.1     05/June/2019
 
 By Dan Porter
 2019
